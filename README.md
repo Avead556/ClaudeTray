@@ -12,7 +12,7 @@ Log in to each account once, then switch with one click — no more `/logout` an
 ![Swift](https://img.shields.io/badge/Swift-AppKit%20%2B%20SwiftUI-F05138?logo=swift&logoColor=white)
 ![Rust](https://img.shields.io/badge/Rust-tray--icon-000?logo=rust)
 
-<img src="docs/popover.png" width="300" alt="ClaudeTray menu with three accounts and their usage limits">
+<img src="docs/menubar.gif" width="560" alt="ClaudeTray in the macOS menu bar with three accounts and their usage limits">
 
 </div>
 
@@ -32,7 +32,23 @@ Log in to each account once, then switch with one click — no more `/logout` an
   <img src="docs/settings.png" width="520" alt="ClaudeTray settings: accounts, open at login, hotkey">
 </p>
 
-## Installation
+## Download
+
+Grab the latest build from [Releases](../../releases/latest):
+
+| Platform | File |
+|---|---|
+| macOS 14.4+ (Apple Silicon) | `ClaudeTray-macos.zip` |
+| Windows | `ClaudeTray-windows-setup.exe` (installer) or `claudetray-windows-x86_64.exe` (portable) |
+| Linux | `claudetray-linux-x86_64`, `claudetray-linux-aarch64` |
+
+The builds are not signed by Apple or Microsoft, so the system will warn on first launch:
+
+- **macOS**: unzip, move `ClaudeTray.app` to `/Applications`, then right-click it → **Open**, or run `xattr -dr com.apple.quarantine /Applications/ClaudeTray.app`.
+- **Windows**: in the SmartScreen dialog click **More info** → **Run anyway**. The installer needs no admin rights, puts ClaudeTray into the Start menu and can add `claudetray` to PATH and enable open at login. The portable exe works too — keep it in a permanent folder before turning on open at login.
+- **Linux**: `chmod +x claudetray-linux-*` before running.
+
+## Building from source
 
 ### macOS
 
@@ -45,8 +61,6 @@ cd mac
 ```
 
 ### Windows and Linux
-
-Prebuilt Windows and Linux x86_64 binaries are produced by [GitHub Actions](.github/workflows/desktop.yml) — grab them from the latest workflow run.
 
 To cross-build from a Mac or any machine with Docker:
 
@@ -126,14 +140,11 @@ On macOS the Keychain is accessed through `/usr/bin/security`, just like Claude 
 
 ## Development
 
-`ClaudeTray --snapshot file.png [--demo] [--settings]` renders the menu or the settings window to an image; `--demo` uses made-up accounts and limits (that's how the screenshots above are made). `-AppleLanguages '(de)'` changes the language.
+Pushing a `v*` tag (`git tag v1.0.0 && git push origin v1.0.0`) builds all platforms and publishes a release via [`release.yml`](.github/workflows/release.yml).
 
-```bash
-cd mac && ./build.sh
-A=build/ClaudeTray.app/Contents/MacOS/ClaudeTray
-$A --snapshot ../docs/popover.png --demo -AppleLanguages '(en)' -AppleLocale en_US
-$A --snapshot ../docs/settings.png --demo --settings -AppleLanguages '(en)' -AppleLocale en_US
-```
+`ClaudeTray --snapshot file.png [--demo] [--expanded] [--menubar | --settings]` renders the menu (optionally under a mock menu bar) or the settings window to an image. `--demo` uses made-up accounts and limits, `-AppleLanguages '(de)'` changes the language.
+
+The screenshots in this README are rendered by [`docs/screenshots.sh`](docs/screenshots.sh) (needs `ffmpeg`).
 
 ## Translations
 
