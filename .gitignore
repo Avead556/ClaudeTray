@@ -1,0 +1,8 @@
+.build/
+build/
+bin/
+obj/
+publish/
+*.iconset/
+.DS_Store
+.idea

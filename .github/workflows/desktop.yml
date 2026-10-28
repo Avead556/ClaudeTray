@@ -1,0 +1,38 @@
+name: desktop
+
+on:
+  push:
+    paths: ["desktop/**", "locales/**", ".github/workflows/desktop.yml"]
+  pull_request:
+    paths: ["desktop/**", "locales/**", ".github/workflows/desktop.yml"]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            artifact: claudetray-linux-x86_64
+            binary: claudetray
+          - os: windows-latest
+            artifact: claudetray-windows-x86_64.exe
+            binary: claudetray.exe
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: desktop
+    steps:
+      - uses: actions/checkout@v4
+      - if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libgtk-3-dev libxdo-dev libayatana-appindicator3-dev libdbus-1-dev
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+      - run: cargo fmt --check
+      - run: cargo clippy --all-targets -- -D warnings
+      - run: cargo test
+      - run: cargo build --release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: desktop/target/release/${{ matrix.binary }}
