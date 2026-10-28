@@ -152,23 +152,15 @@ fn fetch_one(job: &Job) -> Outcome {
     let Some(saved) = saved else {
         return Outcome::Unavailable;
     };
-    let oauth = if api::is_expired(&saved) {
-        if job.active {
-            return if job.known {
-                Outcome::Keep
-            } else {
-                Outcome::Unavailable
-            };
-        }
-        match refresh(&job.id, &saved) {
-            Ok(fresh) => fresh,
-            Err(outcome) => return outcome,
-        }
-    } else {
-        saved
-    };
+    if api::is_expired(&saved) {
+        return if job.known {
+            Outcome::Keep
+        } else {
+            Outcome::Unavailable
+        };
+    }
 
-    let Some(token) = api::access_token(&oauth) else {
+    let Some(token) = api::access_token(&saved) else {
         return Outcome::Unavailable;
     };
     match api::usage(token) {
@@ -177,16 +169,4 @@ fn fetch_one(job: &Job) -> Outcome {
         Err(ApiError::RateLimited) => Outcome::RateLimited,
         Err(_) => Outcome::Keep,
     }
-}
-
-fn refresh(id: &str, saved: &Value) -> Result<Value, Outcome> {
-    let fresh = api::refresh(saved).map_err(|error| match error {
-        ApiError::Unauthorized => Outcome::SignedOut,
-        _ => Outcome::Keep,
-    })?;
-    vault::save(id, &fresh).map_err(|_| Outcome::Unavailable)?;
-    if claude_code::read_oauth().as_ref() == Some(saved) {
-        let _ = claude_code::write_oauth(&fresh);
-    }
-    Ok(fresh)
 }

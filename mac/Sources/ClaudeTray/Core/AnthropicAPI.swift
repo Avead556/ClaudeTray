@@ -9,33 +9,12 @@ enum AnthropicAPI {
     }
 
     private static let usageURL = URL(string: "https://api.anthropic.com/api/oauth/usage")!
-    private static let tokenURL = URL(string: "https://platform.claude.com/v1/oauth/token")!
-    private static let clientID = "9d1c250a-e61b-44d9-88ed-5944d1962f5e"
 
     static func usage(accessToken: String) async throws -> [String: Any] {
         var request = URLRequest(url: usageURL, timeoutInterval: 10)
         request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
         request.setValue("oauth-2025-04-20", forHTTPHeaderField: "anthropic-beta")
         return try await send(request)
-    }
-
-    static func refresh(oauth: [String: Any]) async throws -> [String: Any] {
-        guard let refreshToken = oauth["refreshToken"] as? String else { throw Failure.unauthorized }
-        var request = URLRequest(url: tokenURL, timeoutInterval: 10)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = try JSONSerialization.data(withJSONObject: [
-            "grant_type": "refresh_token", "refresh_token": refreshToken, "client_id": clientID,
-        ])
-        let json = try await send(request)
-        guard let access = json["access_token"] as? String else { throw Failure.other }
-        var updated = oauth
-        updated["accessToken"] = access
-        if let refresh = json["refresh_token"] as? String { updated["refreshToken"] = refresh }
-        if let expiresIn = json["expires_in"] as? Double {
-            updated["expiresAt"] = Int((Date().timeIntervalSince1970 + expiresIn) * 1000)
-        }
-        return updated
     }
 
     static func isExpired(_ oauth: [String: Any]) -> Bool {

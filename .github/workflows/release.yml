@@ -51,11 +51,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: mac/build.sh
-      - run: mkdir -p out && ditto -c -k --keepParent mac/build/ClaudeTray.app out/ClaudeTray-macos.zip
+      - run: |
+          mkdir -p dmg out
+          cp -R mac/build/ClaudeTray.app dmg/
+          ln -s /Applications dmg/Applications
+          hdiutil create -volname ClaudeTray -srcfolder dmg -format UDZO -ov out/ClaudeTray-macos.dmg
       - uses: actions/upload-artifact@v4
         with:
-          name: ClaudeTray-macos.zip
-          path: out/ClaudeTray-macos.zip
+          name: ClaudeTray-macos.dmg
+          path: out/ClaudeTray-macos.dmg
 
   release:
     needs: [desktop, mac]

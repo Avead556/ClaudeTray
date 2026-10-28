@@ -70,22 +70,9 @@ final class UsageMonitor {
 
     private func fetch(_ account: Account, active: Bool) async -> State? {
         guard let saved = active ? ClaudeCode.readOAuth() : TokenVault.token(for: account.id),
-              var oauth = ClaudeCode.object(saved) else { return .unavailable }
+              let oauth = ClaudeCode.object(saved) else { return .unavailable }
 
-        if AnthropicAPI.isExpired(oauth) {
-            if active { return states[account.id] == nil ? .unavailable : nil }
-            do {
-                oauth = try await AnthropicAPI.refresh(oauth: oauth)
-            } catch AnthropicAPI.Failure.unauthorized {
-                return .signedOut
-            } catch {
-                return nil
-            }
-            guard let fresh = ClaudeCode.string(oauth), (try? TokenVault.save(fresh, for: account.id)) != nil else {
-                return .unavailable
-            }
-            if ClaudeCode.readOAuth() == saved { try? ClaudeCode.writeOAuth(fresh) }
-        }
+        if AnthropicAPI.isExpired(oauth) { return states[account.id] == nil ? .unavailable : nil }
 
         guard let token = oauth["accessToken"] as? String else { return .unavailable }
         do {

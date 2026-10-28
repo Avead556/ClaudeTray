@@ -6,6 +6,8 @@
 
 Log in to each account once, then switch with one click — no more `/logout` and `/login`.
 
+<sub>Unofficial tool, not affiliated with Anthropic. See [Disclaimer](#disclaimer).</sub>
+
 ![macOS](https://img.shields.io/badge/macOS-14.4%2B-000?logo=apple)
 ![Windows](https://img.shields.io/badge/Windows-x86__64-0078D4?logo=windows)
 ![Linux](https://img.shields.io/badge/Linux-x86__64%20%7C%20aarch64-FCC624?logo=linux&logoColor=black)
@@ -38,13 +40,13 @@ Grab the latest build from [Releases](../../releases/latest):
 
 | Platform | File |
 |---|---|
-| macOS 14.4+ (Apple Silicon) | `ClaudeTray-macos.zip` |
+| macOS 14.4+ (Apple Silicon) | `ClaudeTray-macos.dmg` |
 | Windows | `ClaudeTray-windows-setup.exe` (installer) or `claudetray-windows-x86_64.exe` (portable) |
 | Linux | `claudetray-linux-x86_64`, `claudetray-linux-aarch64` |
 
 The builds are not signed by Apple or Microsoft, so the system will warn on first launch:
 
-- **macOS**: unzip, move `ClaudeTray.app` to `/Applications`, then right-click it → **Open**, or run `xattr -dr com.apple.quarantine /Applications/ClaudeTray.app`.
+- **macOS**: open the DMG, drag `ClaudeTray.app` to Applications, then right-click it → **Open**, or run `xattr -dr com.apple.quarantine /Applications/ClaudeTray.app`.
 - **Windows**: in the SmartScreen dialog click **More info** → **Run anyway**. The installer needs no admin rights, puts ClaudeTray into the Start menu and can add `claudetray` to PATH and enable open at login. The portable exe works too — keep it in a permanent folder before turning on open at login.
 - **Linux**: `chmod +x claudetray-linux-*` before running.
 
@@ -119,9 +121,20 @@ ClaudeTray remembers the current login and stores each account's tokens in the s
 
 Before saving a new token, the app asks Anthropic who owns it (`GET /api/oauth/profile`). If the token belongs to a different account than the one in `~/.claude.json`, a warning with a **Restore** button appears.
 
-Limits come from the same place as `/usage` in Claude Code (`GET /api/oauth/usage`), at most once every 3 minutes, with a 10-minute pause after a 429. The last responses are cached in `usage.json`. Tokens of inactive accounts are refreshed the same way Claude Code does it; the active account's token is refreshed only by Claude Code itself.
+Limits come from the same place as `/usage` in Claude Code (`GET /api/oauth/usage`), at most once every 3 minutes, with a 10-minute pause after a 429. The last responses are cached in `usage.json`. ClaudeTray never refreshes tokens itself: only Claude Code does, after you switch to an account. Once a saved token of an inactive account expires, its limits show the last known values until you switch to it.
 
 On macOS the Keychain is accessed through `/usr/bin/security`, just like Claude Code does, so there are no access prompts and rebuilding doesn't break anything.
+
+## Disclaimer
+
+ClaudeTray is an unofficial, community-made tool. It is not affiliated with, endorsed by or supported by Anthropic. "Claude" and "Claude Code" are trademarks of Anthropic.
+
+ClaudeTray is built to keep the official Claude Code as the only thing that talks to Claude on your behalf:
+
+- **It does:** keep each account's Claude Code login in your system credential store, put the chosen login back where Claude Code expects it, and read usage limits (`/api/oauth/usage`, the same data as `/usage` in Claude Code).
+- **It doesn't:** send requests to Claude models, refresh tokens or pretend to be Claude Code, proxy or share accounts, or send tokens anywhere outside your machine. Signing in always goes through the official `claude auth login`.
+
+Anthropic hasn't said whether a local account switcher like this is allowed. Its [legal and compliance page](https://code.claude.com/docs/en/legal-and-compliance) says that subscription OAuth is intended for ordinary use of Claude Code and that developers may not "collect, store, or intermediate Claude.ai credentials or session tokens", which could be read to cover storing your own logins locally. The usage endpoint is undocumented and may change. Use ClaudeTray at your own risk.
 
 ## Limitations
 
