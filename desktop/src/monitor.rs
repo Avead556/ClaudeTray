@@ -68,6 +68,10 @@ impl UsageMonitor {
         }
     }
 
+    pub fn state(&self, id: &str) -> Option<&UsageState> {
+        self.states.get(id)
+    }
+
     pub fn lines(&self, id: &str) -> Vec<String> {
         match self.states.get(id) {
             Some(UsageState::Loaded(usage)) => usage.lines(),

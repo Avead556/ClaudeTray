@@ -12,7 +12,7 @@ Log in to each account once, then switch with one click — no more `/logout` an
 ![Windows](https://img.shields.io/badge/Windows-x86__64-0078D4?logo=windows)
 ![Linux](https://img.shields.io/badge/Linux-x86__64%20%7C%20aarch64-FCC624?logo=linux&logoColor=black)
 ![Swift](https://img.shields.io/badge/Swift-AppKit%20%2B%20SwiftUI-F05138?logo=swift&logoColor=white)
-![Rust](https://img.shields.io/badge/Rust-tray--icon-000?logo=rust)
+![Rust](https://img.shields.io/badge/Rust-Slint-000?logo=rust)
 
 <img src="docs/menubar.gif" width="560" alt="ClaudeTray in the macOS menu bar with three accounts and their usage limits">
 
@@ -72,9 +72,9 @@ cd desktop
 ./build.sh all     # dist/claudetray-windows-x86_64.exe and dist/claudetray-linux-<arch>
 ```
 
-Or natively with `cargo build --release`. On Linux this needs `libgtk-3-dev libxdo-dev libayatana-appindicator3-dev libdbus-1-dev`.
+Or natively with `cargo build --release`. On Linux this needs `libdbus-1-dev libfontconfig1-dev`.
 
-Linux needs a tray with AppIndicator support: KDE, Cinnamon and XFCE have it, GNOME needs the AppIndicator extension. The global hotkey works on X11 only.
+Linux needs a tray with StatusNotifierItem support: KDE, Cinnamon and XFCE have it, GNOME needs the AppIndicator extension. The global hotkey works on X11 only.
 
 ## Usage
 
@@ -92,9 +92,16 @@ Linux needs a tray with AppIndicator support: KDE, Cinnamon and XFCE have it, GN
 
 ### Windows and Linux
 
-Run `claudetray` with no arguments to start the tray icon. The menu has accounts with their limits, add / remove account, open at login, hotkey and quit.
+Run `claudetray` with no arguments to start the tray icon.
 
-The default hotkey is <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>A</kbd>. Change it in `settings.json` in the settings folder (`%APPDATA%\ClaudeTray` or `~/.config/ClaudeTray`), e.g. `"hotkey": "ctrl+alt+KeyS"`.
+| Action | How |
+|---|---|
+| Open the accounts popover | left-click the tray icon (on Linux: **Show accounts** in its menu) |
+| Switch account | click its row or press 1–9 in the popover |
+| All limits of an account | the chevron next to the account |
+| Add account, settings, quit | buttons at the bottom of the popover, or right-click the icon |
+| Remove, rename, recolor an account | in Settings: trash button, name field, click the avatar |
+| Next account from any app | <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>A</kbd> (click the shortcut in Settings to change it) |
 
 ### Command line
 
@@ -148,7 +155,7 @@ Anthropic hasn't said whether a local account switcher like this is allowed. Its
 | Folder | What |
 |---|---|
 | [`mac/`](mac) | macOS 14.4+, Swift: AppKit + SwiftUI |
-| [`desktop/`](desktop) | Windows and Linux, Rust: `tray-icon`, `tao`, `global-hotkey`, `keyring` |
+| [`desktop/`](desktop) | Windows and Linux, Rust: [Slint](https://slint.dev) UI and tray, `global-hotkey`, `keyring` |
 | [`locales/`](locales) | Translations, `<lang>.lproj/Localizable.strings`, shared by both apps |
 
 ## Development
@@ -162,3 +169,13 @@ The screenshots in this README are rendered by [`docs/screenshots.sh`](docs/scre
 ## Translations
 
 Keys are the English strings from the code; `%@` is a substituted value. With two substitutions, a translation can reorder them using `%1$@` and `%2$@`. To add a language, copy `locales/en.lproj` to `locales/<code>.lproj`, translate the values and register the language in `desktop/src/i18n.rs`.
+
+## License
+
+ClaudeTray is released under the [MIT License](LICENSE): use, copy, modify and distribute it as you like, including commercially, as long as the copyright notice stays.
+
+## Credits
+
+The Windows and Linux interface is [made with Slint](https://slint.dev), used under the Slint Royalty-free License 2.0. Slint stays under its own license; MIT applies to ClaudeTray's code.
+
+[![Made with Slint](https://raw.githubusercontent.com/slint-ui/slint/master/logo/MadeWithSlint-logo-light.svg)](https://slint.dev)

@@ -11,6 +11,8 @@ pub struct Account {
     pub oauth_account: Value,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub nickname: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub color: Option<usize>,
 }
 
 impl Account {
@@ -37,6 +39,7 @@ impl Account {
             organization,
             oauth_account: json.clone(),
             nickname: None,
+            color: None,
         })
     }
 

@@ -58,3 +58,11 @@
 "This shortcut is taken by another app — choose another" = "Это сочетание занято другим приложением — выберите другое";
 "Click to change the shortcut" = "Нажмите, чтобы сменить сочетание";
 "Rename: claudetray rename <number, name or email> <new name>" = "Переименовать: claudetray rename <номер, название или почта> <новое название>";
+"Add" = "Добавить";
+"Settings" = "Настройки";
+"General" = "Общие";
+"On" = "Вкл.";
+"Off" = "Откл.";
+"Active" = "Активен";
+"Show accounts" = "Показать аккаунты";
+"X11 only" = "только X11";

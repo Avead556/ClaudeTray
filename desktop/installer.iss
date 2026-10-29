@@ -18,6 +18,7 @@ ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 OutputDir=dist
 OutputBaseFilename=ClaudeTray-windows-setup
+SetupIconFile=assets\icon.ico
 UninstallDisplayIcon={app}\claudetray.exe
 ChangesEnvironment=yes
 CloseApplications=force

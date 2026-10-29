@@ -58,3 +58,11 @@
 "This shortcut is taken by another app — choose another" = "This shortcut is taken by another app — choose another";
 "Click to change the shortcut" = "Click to change the shortcut";
 "Rename: claudetray rename <number, name or email> <new name>" = "Rename: claudetray rename <number, name or email> <new name>";
+"Add" = "Add";
+"Settings" = "Settings";
+"General" = "General";
+"On" = "On";
+"Off" = "Off";
+"Active" = "Active";
+"Show accounts" = "Show accounts";
+"X11 only" = "X11 only";

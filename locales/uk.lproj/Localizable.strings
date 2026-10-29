@@ -58,3 +58,11 @@
 "This shortcut is taken by another app — choose another" = "Це сполучення зайняте іншою програмою — виберіть інше";
 "Click to change the shortcut" = "Натисніть, щоб змінити сполучення";
 "Rename: claudetray rename <number, name or email> <new name>" = "Перейменувати: claudetray rename <номер, назва або пошта> <нова назва>";
+"Add" = "Додати";
+"Settings" = "Налаштування";
+"General" = "Загальні";
+"On" = "Увімк.";
+"Off" = "Вимк.";
+"Active" = "Активний";
+"Show accounts" = "Показати акаунти";
+"X11 only" = "лише X11";

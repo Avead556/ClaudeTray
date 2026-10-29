@@ -141,6 +141,13 @@ impl Store {
         }
     }
 
+    pub fn set_color(&mut self, id: &str, color: Option<usize>) {
+        if let Some(account) = self.accounts.iter_mut().find(|account| account.id == id) {
+            account.color = color;
+            self.persist();
+        }
+    }
+
     pub fn next_account(&self) -> Option<&Account> {
         if self.accounts.len() < 2 {
             return None;
@@ -195,6 +202,7 @@ impl Store {
         {
             Some(existing) => {
                 account.nickname = existing.nickname.clone();
+                account.color = existing.color;
                 if *existing == account {
                     return;
                 }

@@ -7,7 +7,6 @@ mod claude_code;
 mod cli;
 mod i18n;
 mod icon;
-mod menu;
 mod monitor;
 mod paths;
 mod platform;
@@ -15,6 +14,11 @@ mod settings;
 mod store;
 mod usage;
 mod vault;
+mod view;
+
+mod ui {
+    slint::include_modules!();
+}
 
 fn main() {
     let args: Vec<String> = std::env::args().skip(1).collect();
